@@ -1,0 +1,657 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FishMarket Connect</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!--  LOGIN / REGISTER -->
+<div id="authScreen">
+
+    <div class="auth-container">
+
+        <!-- LOGIN -->
+        <div id="loginPanel" class="auth-panel">
+
+          <div class="auth-logo">
+        <img src="images/logo.png" alt="FishMarket Connect Logo">
+    </div>
+
+
+            <h1>FishMarket Connect</h1>
+            <p class="auth-subtitle">
+                Welcome back! Please log in.
+            </p>
+
+            <form id="loginForm">
+
+                <label for="loginUsername">Username</label>
+
+                <input
+                    type="text"
+                    id="loginUsername"
+                    placeholder="Enter your username"
+                    required
+                >
+
+                <label for="loginPassword">Password</label>
+
+                <div class="password-field">
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePassword('loginPassword', this)"
+                    >
+                        Show
+                    </button>
+
+                </div>
+
+                <p id="loginError" class="auth-error"></p>
+
+                <button type="submit" class="auth-submit">
+                    Log In
+                </button>
+
+            </form>
+
+            <p class="auth-switch">
+                Don't have an account?
+                <button type="button" onclick="showRegister()">
+                    Register
+                </button>
+            </p>
+
+        </div>
+
+
+        <!-- REGISTER -->
+        <div id="registerPanel" class="auth-panel hidden">
+
+    <div class="auth-logo">
+        <img src="images/logo.png" alt="FishMarket Connect Logo">
+    </div>
+
+    <h1>Create Account</h1>
+
+    <p class="auth-subtitle">
+        Join FishMarket Connect
+    </p>
+
+    <form id="registerForm">
+                <!-- STEP 1 -->
+                <div class="register-step active" data-step="1">
+
+                    <label for="registerUsername">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="registerUsername"
+                        placeholder="Create your username"
+                        minlength="3"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="auth-submit"
+                        onclick="nextRegisterStep(1)"
+                    >
+                        Continue
+                    </button>
+
+                </div>
+
+
+                <!-- STEP 2 -->
+                <div class="register-step" data-step="2">
+
+                    <label for="registerEmail">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                    <div class="step-buttons">
+
+                        <button
+                            type="button"
+                            class="auth-back"
+                            onclick="previousRegisterStep(2)"
+                        >
+                            Back
+                        </button>
+
+                        <button
+                            type="button"
+                            class="auth-submit"
+                            onclick="nextRegisterStep(2)"
+                        >
+                            Continue
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 3 -->
+                <div class="register-step" data-step="3">
+
+                    <label for="registerPassword">
+                        Password
+                    </label>
+
+                    <div class="password-field">
+
+                        <input
+                            type="password"
+                            id="registerPassword"
+                            placeholder="Create your password"
+                            minlength="6"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword('registerPassword', this)"
+                        >
+                            Show
+                        </button>
+
+                    </div>
+
+                    <label for="confirmPassword">
+                        Confirm Password
+                    </label>
+
+                    <div class="password-field">
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Confirm your password"
+                            minlength="6"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword('confirmPassword', this)"
+                        >
+                            Show
+                        </button>
+
+                    </div>
+
+                    <div class="step-buttons">
+
+                        <button
+                            type="button"
+                            class="auth-back"
+                            onclick="previousRegisterStep(3)"
+                        >
+                            Back
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="auth-submit"
+                        >
+                            Create Account
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <p id="registerError" class="auth-error"></p>
+
+            </form>
+
+            <p class="auth-switch">
+                Already have an account?
+                <button type="button" onclick="showLogin()">
+                    Log In
+                </button>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ===============================
+     MAIN SYSTEM
+================================ -->
+
+<div id="appShell" class="hidden">
+
+<header>
+
+    <h1>FishMarket Connect</h1>
+
+    <p>Fish Prices, Buyers, Casas & Market Information</p>
+
+    <span>📍 Mamburao, Occidental Mindoro</span>
+
+    <button
+        type="button"
+        id="logoutButton"
+        onclick="logout()"
+    >
+        Logout
+    </button>
+
+</header>
+
+
+<!-- NAVIGATION -->
+
+<nav>
+
+    <button class="active" onclick="showPage('home',this)">
+        <img src="script.js/icons/home.png" class="nav-icon"> Home
+    </button>
+
+    <button onclick="showPage('prices',this)">
+        <img src="script.js/icons/prices.png" class="nav-icon"> Prices
+    </button>
+
+    <button onclick="showPage('buyers',this)">
+        <img src="script.js/icons/casas.png" class="nav-icon"> Casas / Buyers
+    </button>
+
+    <button onclick="showPage('map',this)">
+        <img src="script.js/icons/map.png" class="nav-icon"> Map
+    </button>
+
+    <button onclick="showPage('report',this)">
+        <img src="script.js/icons/report.png" class="nav-icon"> Report
+    </button>
+
+    <button onclick="showPage('analytics',this)">
+        <img src="script.js/icons/analytics.png" class="nav-icon"> Reports
+    </button>
+
+    <button onclick="showPage('chatbot',this)">
+        <img src="script.js/icons/ai.png" class="nav-icon"> AI Chatbot
+    </button>
+
+</nav>
+
+
+<main>
+
+    <!-- HOME -->
+
+    <section id="home" class="page active">
+
+        <h2>Welcome, Fisherfolk!</h2>
+        <p>FishMarket Connect Dashboard</p>
+
+        <div class="grid">
+
+            <div class="stat-card clickable-card"
+                 onclick="openHighestPrice()">
+
+                <h4>Highest Price</h4>
+                <h2 id="highest">₱0</h2>
+                <p id="highestFish">No data</p>
+                <small>Click to view fish price →</small>
+
+            </div>
+
+            <div class="stat-card clickable-card"
+                 onclick="openLowestPrice()">
+
+                <h4>Lowest Price</h4>
+                <h2 id="lowest">₱0</h2>
+                <p id="lowestFish">No data</p>
+                <small>Click to view fish price →</small>
+
+            </div>
+
+            <div class="stat-card clickable-card"
+                 onclick="openTotalCatch()">
+
+                <h4>Total Catch</h4>
+                <h2 id="totalCatch">0 kg</h2>
+                <small>Click to view catch reports →</small>
+
+            </div>
+
+            <div class="stat-card clickable-card"
+                 onclick="openAllBuyerLocations()">
+
+                <h4>Buyer Locations</h4>
+                <h2 id="buyerCount">0</h2>
+                <small>Click to view buyer map →</small>
+
+            </div>
+
+        </div>
+
+        <h3>Nearby Markets</h3>
+        <div id="homeMarkets"></div>
+
+        <h3>Featured Buyers</h3>
+        <div id="homeBuyers"></div>
+
+    </section>
+
+
+ 
+
+    <section id="prices" class="page">
+
+        <h2>Fish Prices</h2>
+
+        <div class="toolbar">
+
+            <input type="search" id="priceSearch"
+                   placeholder="Search fish or market...">
+
+            <select id="fishFilter">
+                <option value="all">All Species</option>
+                <option>Bangus</option>
+                <option>Tilapia</option>
+                <option>Galunggong</option>
+                <option>Lapu-lapu</option>
+                <option>Tambakol</option>
+                <option>Lumahan</option>
+                <option>Tulingan</option>
+                <option>Squid</option>
+            </select>
+
+            <select id="marketFilter">
+                <option value="all">All Markets</option>
+                <option>Mamburao</option>
+                <option>Sablayan</option>
+                <option>Batangas</option>
+                <option>San Jose</option>
+            </select>
+
+        </div>
+
+        <div id="priceList"></div>
+
+    </section>
+
+
+ 
+
+    <section id="buyers" class="page">
+
+        <h2>Casas / Fish Buyers</h2>
+        <p>Find potential fish buyers in Mamburao.</p>
+
+        <input type="search" id="buyerSearch"
+               placeholder="Search buyer or location...">
+
+        <div id="buyerList"></div>
+
+    </section>
+
+
+ 
+
+    <section id="map" class="page">
+
+        <h2>Fish Market Locations</h2>
+        <p>Find fish markets in different locations.</p>
+
+        <select id="mapSelect" onchange="updateMap()">
+
+            <option value="Mamburao Public Market, Mamburao, Occidental Mindoro, Philippines">
+                Mamburao Fish Market
+            </option>
+
+            <option value="Sablayan Public Market, Sablayan, Occidental Mindoro, Philippines">
+                Sablayan Fish Market
+            </option>
+
+            <option value="San Jose Public Market, San Jose, Occidental Mindoro, Philippines">
+                San Jose Fish Market
+            </option>
+
+            <option value="New Batangas City Public Market, Batangas City, Philippines">
+                Batangas Fish Market (Bagong Palengke)
+            </option>
+
+        </select>
+
+        <button type="button" onclick="updateMap()">
+            Search Location
+        </button>
+
+        <iframe
+            id="mapFrame"
+            src="https://www.google.com/maps?q=Mamburao%20Public%20Market%2C%20Mamburao%2C%20Occidental%20Mindoro%2C%20Philippines&output=embed"
+            loading="lazy"
+            allowfullscreen>
+        </iframe>
+
+    </section>
+
+
+ 
+
+    <section id="report" class="page">
+
+        <h2>Fish Catch Report</h2>
+
+        <form id="catchForm">
+
+            <label>Fisherfolk Name</label>
+            <input id="fisherName" required>
+
+            <label>Fish Species</label>
+
+            <select id="species" required>
+                <option value="">Select Fish</option>
+                <option>Bangus</option>
+                <option>Tilapia</option>
+                <option>Galunggong</option>
+                <option>Lapu-lapu</option>
+                <option>Tambakol</option>
+                <option>Lumahan</option>
+                <option>Tulingan</option>
+                <option>Squid</option>
+            </select>
+
+            <label>Quantity (kg)</label>
+
+            <input type="number" id="quantity"
+                   min="0.1" step="0.1" required>
+
+            <label>Price per kilo (₱)</label>
+
+            <input type="number" id="sellingPrice"
+                   min="0.01" step="0.01" required>
+
+            <label>Buyer / Casa / Market</label>
+
+            <select id="sellingLocation" required>
+                <option value="">Select Location</option>
+                <option>Mathy Fish Buyer</option>
+                <option>Ricky Fish Buyer</option>
+                <option>D&L Seafoods</option>
+                <option>Mamburao Public Market</option>
+                <option>Sitio Aroma Fishing Port</option>
+                <option>Other</option>
+            </select>
+
+            <label>Catch Date</label>
+            <input type="date" id="catchDate" required>
+
+            <label>Notes</label>
+            <textarea id="notes"></textarea>
+
+            <button type="submit">Submit Report</button>
+
+        </form>
+
+        <h3>My Submitted Reports</h3>
+
+        <div id="myReports"></div>
+
+    </section>
+
+
+    <!-- ANALYTICS -->
+
+    <section id="analytics" class="page">
+
+        <h2>Reports & Analytics</h2>
+
+        <div class="grid">
+
+            <div class="stat-card">
+                <h4>Total Catch</h4>
+                <h2 id="analyticsCatch">0 kg</h2>
+            </div>
+
+            <div class="stat-card">
+                <h4>Total Reports</h4>
+                <h2 id="analyticsReports">0</h2>
+            </div>
+
+            <div class="stat-card">
+                <h4>Average Price</h4>
+                <h2 id="averagePrice">₱0</h2>
+            </div>
+
+            <div class="stat-card">
+                <h4>Total Sales</h4>
+                <h2 id="totalSales">₱0</h2>
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Catch Volume by Species</h3>
+            <div id="speciesChart"></div>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Recent Reports</h3>
+            <h2>My Submitted Reports</h2>
+
+            <div id="analyticsList"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- AI CHATBOT 
+
+    <section id="chatbot" class="page">
+
+        <div class="chatbot-container">
+
+            <div class="chatbot-header">
+
+                <div>
+                    <h2>FishMarket AI Assistant</h2>
+                    <p>Ask questions about fish prices, buyers, and catch reports.</p>
+                </div>
+
+                <span class="chatbot-status">
+                    AI Assistant
+                </span>
+
+            </div>
+
+            <div id="chatMessages" class="chat-messages">
+
+                <div class="chat-message bot-message">
+
+                    <div class="message-avatar">AI</div>
+
+                    <div class="message-content">
+
+                        <strong>FishMarket AI</strong>
+
+                        <p>
+                            Hello! How can I help you today?
+                            You can ask me about fish prices,
+                            available buyers, and catch reports.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <form id="chatForm" class="chat-input-area">
+
+                <input
+                    type="text"
+                    id="chatInput"
+                    placeholder="Ask something about FishMarket Connect..."
+                    maxlength="1000"
+                    autocomplete="off"
+                    required
+                >
+
+                <button type="submit" id="chatSendButton">
+                    Send
+                </button>
+
+            </form>
+
+            <p class="chatbot-disclaimer">
+                AI-generated answers may contain errors.
+                Verify important market information.
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    FishMarket Connect | Mamburao, Occidental Mindoro
+</footer>
+
+</div>
+
+-->
+<!-- SCRIPT -->
+
+<script src="script.js/script.js" defer></script>
+
+</body>
+</html>
